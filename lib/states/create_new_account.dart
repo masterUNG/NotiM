@@ -6,6 +6,7 @@ import 'package:notim/utility/my_constant.dart';
 import 'package:notim/utility/my_dialog.dart';
 import 'package:notim/widgets/show_button.dart';
 import 'package:notim/widgets/show_form.dart';
+import 'package:notim/widgets/show_google_map.dart';
 import 'package:notim/widgets/show_icon_button.dart';
 import 'package:notim/widgets/show_image.dart';
 import 'package:notim/widgets/show_progress.dart';
@@ -138,7 +139,7 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
           width: 300,
           height: 250,
           child:
-              lat == null ? const ShowProgress() : ShowText(text: '$lat, $lng'),
+              lat == null ? const ShowProgress() : ShowGoogleMap(lat: lat!, lng: lng!),
         ),
       ],
     );
