@@ -53,7 +53,11 @@ class _AuthenState extends State<Authen> {
         ShowTextButton(
           label: 'Create Account',
           pressFunc: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const CreateNewAccount(),));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CreateNewAccount(),
+                ));
           },
         ),
       ],
@@ -69,6 +73,7 @@ class _AuthenState extends State<Authen> {
 
   ShowForm newPassword() {
     return ShowForm(
+      changeFunc: (p0) {},
       hint: 'Passwoerd:',
       obsecu: redEye,
       redEyeFunc: () {
@@ -81,6 +86,7 @@ class _AuthenState extends State<Authen> {
 
   ShowForm newEmail() {
     return ShowForm(
+      changeFunc: (p0) {},
       hint: 'Email:',
       iconData: Icons.contact_mail_outlined,
     );

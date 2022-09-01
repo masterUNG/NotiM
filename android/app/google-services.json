@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1005627630908",
+    "project_id": "notim-1b55e",
+    "storage_bucket": "notim-1b55e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1005627630908:android:d0566d7306269b5bd6aa39",
+        "android_client_info": {
+          "package_name": "com.flutterthailand.notim"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1005627630908-169477g963uogj02tedopie8hteb8b2a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAC-iXHvCWJOQgMWGVD2h5GDtsDZ25BArQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1005627630908-169477g963uogj02tedopie8hteb8b2a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

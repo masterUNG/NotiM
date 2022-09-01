@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:notim/utility/my_constant.dart';
 import 'package:notim/utility/my_dialog.dart';
+import 'package:notim/utility/my_service.dart';
 import 'package:notim/widgets/show_button.dart';
 import 'package:notim/widgets/show_form.dart';
 import 'package:notim/widgets/show_google_map.dart';
@@ -21,6 +24,8 @@ class CreateNewAccount extends StatefulWidget {
 
 class _CreateNewAccountState extends State<CreateNewAccount> {
   double? lat, lng;
+  File? file;
+  String? name, email, password;
 
   @override
   void initState() {
@@ -100,7 +105,9 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
         actions: [
           ShowIconButton(
             iconData: Icons.cloud_upload,
-            pressFunc: () {},
+            pressFunc: () {
+              processCreateNewAccount();
+            },
           )
         ],
         centerTitle: true,
@@ -125,7 +132,9 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
   ShowButton buttonCreateAccount({required BuildContext context}) {
     return ShowButton(
       label: 'Create New Account',
-      pressFunc: () {},
+      pressFunc: () {
+        processCreateNewAccount();
+      },
     );
   }
 
@@ -138,8 +147,9 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
           decoration: MyConstant().curveBox(),
           width: 300,
           height: 250,
-          child:
-              lat == null ? const ShowProgress() : ShowGoogleMap(lat: lat!, lng: lng!),
+          child: lat == null
+              ? const ShowProgress()
+              : ShowGoogleMap(lat: lat!, lng: lng!),
         ),
       ],
     );
@@ -150,6 +160,9 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ShowForm(
+          changeFunc: (p0) {
+            password = p0.trim();
+          },
           hint: 'Password:',
           iconData: Icons.lock_outline,
         ),
@@ -162,6 +175,9 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ShowForm(
+          changeFunc: (p0) {
+            email = p0.trim();
+          },
           hint: 'Email:',
           iconData: Icons.email_outlined,
         ),
@@ -174,6 +190,9 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ShowForm(
+          changeFunc: (p0) {
+            name = p0.trim();
+          },
           hint: 'Name:',
           iconData: Icons.fingerprint,
         ),
@@ -181,14 +200,79 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
     );
   }
 
-  Container newAvatar() {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16),
-      width: 200,
-      height: 200,
-      child: ShowImage(
-        path: 'images/avatar.png',
-      ),
+  Row newAvatar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 16),
+          width: 200,
+          height: 200,
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: file == null
+                    ? const ShowImage(
+                        path: 'images/avatar.png',
+                      )
+                    : CircleAvatar(
+                        radius: 68,
+                        backgroundImage: FileImage(file!),
+                      ),
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: ShowIconButton(
+                  iconData: Icons.add_a_photo,
+                  pressFunc: () {
+                    MyDialog(context: context).normalDialog(
+                      title: 'Source Image ?',
+                      subTitle: 'Plese Tap Camere or Callery',
+                      label: 'Gallery',
+                      pressFunc: () async {
+                        Navigator.pop(context);
+                        file = await MyService()
+                            .processTakePhoto(imageSource: ImageSource.gallery);
+                        setState(() {});
+                      },
+                      label2: 'Camera',
+                      pressFunc2: () async {
+                        Navigator.pop(context);
+                        file = await MyService()
+                            .processTakePhoto(imageSource: ImageSource.camera);
+                        setState(() {});
+                      },
+                    );
+                  },
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
     );
+  }
+
+  Future<void> processCreateNewAccount() async {
+    if (file == null) {
+      MyDialog(context: context)
+          .normalDialog(title: 'No Image', subTitle: 'Please Take Photo');
+    } else if ((name?.isEmpty ?? true) ||
+        (email?.isEmpty ?? true) ||
+        (password?.isEmpty ?? true)) {
+      MyDialog(context: context).normalDialog(
+          title: 'Have Space ?', subTitle: 'Please Fill Every Blank');
+    } else {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email!, password: password!)
+          .then((value) {
+        print('Create Account Success');
+      }).catchError((value) {
+        MyDialog(context: context)
+            .normalDialog(title: value.code, subTitle: value.message);
+      });
+    }
   }
 }
