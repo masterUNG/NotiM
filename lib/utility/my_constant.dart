@@ -8,6 +8,10 @@ class MyConstant {
 
   //method
 
+  BoxDecoration curveBox() {
+    return BoxDecoration(border: Border.all(),);
+  }
+
   BoxDecoration basicBox() {
     return BoxDecoration(color: bgColor.withOpacity(0.5));
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notim/states/create_new_account.dart';
 import 'package:notim/utility/my_constant.dart';
 import 'package:notim/widgets/show_button.dart';
 import 'package:notim/widgets/show_form.dart';
@@ -25,7 +26,8 @@ class _AuthenState extends State<Authen> {
         onTap: () {
           FocusScope.of(context).requestFocus(FocusScopeNode());
         },
-        child: Container(decoration: MyConstant().basicBox(),
+        child: Container(
+          decoration: MyConstant().basicBox(),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -34,17 +36,27 @@ class _AuthenState extends State<Authen> {
                 newEmail(),
                 newPassword(),
                 buttonLogin(),
-                Row(mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ShowText(text: 'Non Account ? '),
-                    ShowTextButton(label: 'Create Account', pressFunc: () {}),
-                  ],
-                ),
+                newCreateAccount(),
               ],
             ),
           ),
         ),
       )),
+    );
+  }
+
+  Row newCreateAccount() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ShowText(text: 'Non Account ? '),
+        ShowTextButton(
+          label: 'Create Account',
+          pressFunc: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const CreateNewAccount(),));
+          },
+        ),
+      ],
     );
   }
 
